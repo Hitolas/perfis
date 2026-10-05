@@ -3,110 +3,127 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Registro de Pessoal</title>
+<title>Fundação [REDACTED] · Registro de Pessoal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;1,6..96,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0d0f12; --panel: #15181d; --panel2: #1b1f26; --line: #2a2f38;
-    --text: #e8eaed; --muted: #9aa3ae; --accent: #c9302c; --accent2: #f0b429; --ok: #3ddc84;
-    --twitch: #9146ff; --radius: 14px;
+    --bg: #0a0908; --panel: #12100c; --panel2: #1a1712; --line: #3a3222; --line2: #241f17;
+    --text: #ede6d6; --forte: #f4eedf; --muted: #9a8f7a; --apagado: #5e5543;
+    --ouro: #c9a24a; --ouro2: #e6c877; --vermelho: #a3121b; --vermelho-txt: #e0444c;
+    --serif: "Bodoni Moda", Georgia, serif; --mono: "IBM Plex Mono", ui-monospace, monospace;
   }
   * { box-sizing: border-box; }
-  html, body { margin: 0; background: var(--bg); color: var(--text); font: 400 16px/1.5 Inter, system-ui, sans-serif; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); font: 400 14px/1.5 var(--mono); }
   a { color: inherit; text-decoration: none; }
-  .wrap { max-width: 980px; margin: 0 auto; padding: 24px 16px 64px; }
-  .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 32px 16px 64px; }
+  .rot { font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: var(--muted); }
 
-  header { display: flex; align-items: center; gap: 14px; padding-bottom: 20px; border-bottom: 1px solid var(--line); margin-bottom: 24px; }
-  header img { width: 52px; height: 52px; border-radius: 50%; border: 2px solid var(--accent); }
-  header .t1 { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
-  header .t2 { font-size: 22px; font-weight: 800; }
-  header .sp { flex: 1; }
-  header .live { font-size: 13px; color: var(--muted); }
-  header .live a { color: var(--twitch); font-weight: 600; }
+  header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px;
+    padding-bottom: 20px; border-bottom: 1px solid var(--line); margin-bottom: 48px; }
+  .marca { display: flex; align-items: center; gap: 14px; }
+  .marca svg { width: 36px; height: 36px; flex-shrink: 0; }
+  .marca .t1 { font-size: 12px; letter-spacing: .28em; color: var(--ouro); }
+  .marca .red { background: var(--text); color: var(--bg); padding: 0 6px; letter-spacing: .2em; }
+  .marca .t2 { font-size: 10px; letter-spacing: .28em; color: var(--muted); }
+  .canal { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); padding: 12px 0; }
+  .canal:hover, .back:hover { color: var(--ouro2); }
 
-  .search { display: flex; gap: 8px; margin-bottom: 20px; }
-  .search input { flex: 1; background: var(--panel); border: 1px solid var(--line); color: var(--text); border-radius: 10px;
-    padding: 12px 14px; font: inherit; outline: none; }
-  .search input:focus { border-color: var(--accent2); }
+  .intro { display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px; }
+  .intro .aviso { font-size: 12px; letter-spacing: .28em; color: var(--vermelho-txt); }
+  .intro h1 { margin: 0; font: 400 clamp(44px, 9vw, 72px)/1.02 var(--serif); color: var(--forte); }
+  .intro p { margin: 0; max-width: 560px; color: #b8ae98; }
 
-  .rank { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
-  .row { display: grid; grid-template-columns: 44px 40px 1fr auto; gap: 12px; align-items: center; padding: 10px 14px;
-    border-top: 1px solid var(--line); transition: background .15s; }
-  .row:first-child { border-top: 0; }
-  .row:hover { background: var(--panel2); }
-  .row .pos { font-family: "IBM Plex Mono", monospace; color: var(--muted); text-align: right; }
-  .row.top1 .pos { color: var(--accent2); } .row.top2 .pos { color: #c0c6cf; } .row.top3 .pos { color: #cd8b52; }
-  .row img { width: 40px; height: 40px; border-radius: 50%; }
-  .row .nm { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .row .sub { font-size: 13px; color: var(--muted); }
-  .row .lv { text-align: right; font-size: 13px; color: var(--muted); }
-  .row .lv b { display: block; color: var(--text); font-size: 15px; }
-  .empty { padding: 28px; text-align: center; color: var(--muted); }
+  .search { display: flex; flex-direction: column; gap: 8px; margin-bottom: 40px; }
+  .search input { height: 52px; background: var(--panel); border: 1px solid var(--line); color: var(--text);
+    font: 15px var(--mono); padding: 0 18px; border-radius: 0; outline: none; }
+  .search input:focus { border-color: var(--ouro); }
 
-  .back { display: inline-block; margin-bottom: 16px; color: var(--muted); font-size: 14px; }
-  .back:hover { color: var(--text); }
-  .dossie { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; position: relative; overflow: hidden; }
-  .dossie::before { content: "DOSSIÊ"; position: absolute; right: -10px; top: 8px; transform: rotate(8deg);
-    font: 600 46px "IBM Plex Mono", monospace; color: rgba(201, 48, 44, .09); letter-spacing: .1em; pointer-events: none; }
-  .head { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
-  .head img { width: 96px; height: 96px; border-radius: 16px; border: 2px solid var(--line); }
-  .head .who { flex: 1; min-width: 200px; }
-  .head h1 { margin: 0; font-size: 28px; line-height: 1.15; overflow-wrap: anywhere; }
-  .badge { display: inline-block; margin-top: 6px; padding: 3px 10px; border-radius: 999px; font-size: 13px; font-weight: 600;
-    background: rgba(201, 48, 44, .15); color: #ff8a85; border: 1px solid rgba(201, 48, 44, .4); }
-  .head .posn { text-align: right; }
-  .head .posn b { display: block; font: 600 30px "IBM Plex Mono", monospace; color: var(--accent2); }
-  .head .posn span { font-size: 13px; color: var(--muted); }
+  .rank { border-top: 1px solid var(--line); }
+  .row { display: flex; align-items: center; gap: 20px; padding: 18px 4px; border-bottom: 1px solid var(--line2); }
+  .row:hover .nm { color: var(--ouro2); }
+  .row .pos { width: 48px; font: 30px/1 var(--serif); color: var(--apagado); flex-shrink: 0; }
+  .row.top .pos { color: var(--ouro); }
+  .row img { width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--line); background: var(--panel2); flex-shrink: 0; }
+  .row.top img { border-color: var(--ouro); }
+  .row.p1 img { border-color: var(--vermelho-txt); }
+  .row .who { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .row .nm { font-size: 17px; color: var(--forte); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .row .sub { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+  .row .lv { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; font-size: 12px; color: var(--muted); }
+  .row .lv b { font-weight: 400; font-size: 13px; letter-spacing: .14em; color: var(--ouro); }
+  .empty { padding: 28px 0; color: var(--muted); }
 
-  .xp { margin: 20px 0 6px; }
-  .xp .lbl { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
-  .bar { height: 10px; background: var(--panel2); border-radius: 999px; overflow: hidden; border: 1px solid var(--line); }
-  .bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 999px; }
+  .back { display: inline-block; font-size: 12px; letter-spacing: .18em; color: var(--ouro); padding: 12px 0; margin: -36px 0 24px; }
+  .perfil { display: flex; flex-direction: column; gap: 56px; }
+  .head { display: flex; flex-wrap: wrap; align-items: center; gap: 48px; }
+  .anel { width: 220px; height: 220px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; flex-shrink: 0; }
+  .anel > div { width: 188px; height: 188px; border-radius: 50%; border: 1px solid var(--ouro); display: grid; place-items: center; }
+  .anel img { width: 164px; height: 164px; border-radius: 50%; background: var(--panel2); object-fit: cover; color: transparent; }
+  .head .who { flex: 1 1 360px; min-width: 0; display: flex; flex-direction: column; gap: 14px; position: relative; }
+  .head h1 { margin: 0; font: 400 clamp(44px, 9vw, 76px)/1 var(--serif); color: var(--forte); overflow-wrap: anywhere; }
+  .alias { font: italic 26px/1.2 var(--serif); color: var(--ouro); overflow-wrap: anywhere; }
+  .tags { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 8px; font-size: 12px; letter-spacing: .22em; text-transform: uppercase; }
+  .tags .patente { background: var(--vermelho); color: #fff6f0; padding: 7px 14px; }
+  .tags .nivel { color: var(--ouro); }
+  .tags .pos { color: var(--muted); }
+  .carimbo { position: absolute; top: -14px; right: 0; transform: rotate(-8deg); border: 2px solid var(--vermelho-txt);
+    color: var(--vermelho-txt); font-size: 13px; font-weight: 500; letter-spacing: .3em; padding: 6px 12px; pointer-events: none; }
 
-  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 20px; }
-  .stat { background: var(--panel2); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
-  .stat .k { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
-  .stat .v { font-size: 20px; font-weight: 800; margin-top: 2px; }
+  .bio { display: flex; flex-direction: column; gap: 10px; max-width: 720px; }
+  .bio p { margin: 0; font: 22px/1.45 var(--serif); color: #dcd3bf; overflow-wrap: anywhere; white-space: pre-line; }
 
-  h2 { font-size: 15px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 28px 0 12px; }
-  .ach { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
-  .a { background: var(--panel2); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
-  .a.tem { border-color: rgba(240, 180, 41, .45); background: linear-gradient(160deg, rgba(240, 180, 41, .10), var(--panel2) 60%); }
-  .a .n { font-weight: 800; }
-  .a .d { font-size: 13px; color: var(--muted); margin-top: 2px; }
-  .a.nao { opacity: .5; }
-  .a.nao .n::after { content: "  🔒"; font-size: 12px; }
+  .xp { display: flex; flex-direction: column; gap: 12px; }
+  .xp .lbl { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 12px; letter-spacing: .12em; }
+  .xp .lbl span:first-child { color: var(--ouro); } .xp .lbl span:last-child { color: var(--muted); }
+  .bar { height: 4px; background: var(--line2); }
+  .bar i { display: block; height: 100%; background: var(--ouro); }
 
-  footer { margin-top: 36px; font-size: 13px; color: var(--muted); text-align: center; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .stat { padding: 28px 24px 28px 0; display: flex; flex-direction: column; gap: 10px; }
+  .stat .v { font: 40px/1 var(--serif); color: var(--forte); }
+  .stat .v small { font-size: 18px; color: var(--muted); }
+  .stat.ouro .v { color: var(--ouro); }
+
+  .secao { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 24px; }
+  .secao h2 { margin: 0; font: 400 36px var(--serif); color: var(--forte); }
+  .secao span { font-size: 12px; letter-spacing: .22em; color: var(--ouro); }
+  .ach { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
+  .a { border: 1px solid #5a4a26; background: var(--panel); padding: 20px; display: flex; flex-direction: column; gap: 10px; min-height: 120px; }
+  .a .topo { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .a .n { font: 22px/1.15 var(--serif); color: var(--ouro2); }
+  .a .d { font-size: 12px; color: #b8ae98; }
+
+  footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 11px; letter-spacing: .08em; color: #8c836f;
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
   @media (max-width: 560px) {
-    .row { grid-template-columns: 34px 36px 1fr; }
-    .row .lv { display: none; }
-    .head .posn { text-align: left; }
+    .row { gap: 12px; } .row .pos { width: 32px; font-size: 22px; } .row .lv { display: none; }
+    .head { gap: 28px; } .carimbo { position: static; align-self: flex-start; margin-bottom: 8px; }
   }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <img id="canalFoto" alt="">
-    <div>
-      <div class="t1">Fundação · Registro de Pessoal</div>
-      <div class="t2" id="canalNome">Carregando…</div>
-    </div>
-    <div class="sp"></div>
-    <div class="live" id="canalLink"></div>
+    <a class="marca" href="?">
+      <svg viewBox="0 0 135 135" role="img" aria-label="Símbolo da Fundação"><circle cx="67.7" cy="71.5" r="33" fill="none" stroke="#c9a24a" stroke-width="6"/><path d="m51.9 11.9h31.7l3.07 11.4.944.391c19.4 8.03 32 26.9 32 47.9 0 2.26-.149 4.53-.445 6.77l-.133 1.01 8.37 8.37-15.8 27.4-11.4-3.06-.809.623c-9.06 6.95-20.2 10.7-31.6 10.7-11.4 0-22.5-3.77-31.6-10.7l-.81-.623-11.4 3.06-15.8-27.4 8.37-8.37-.133-1.01c-.296-2.25-.445-4.51-.445-6.77 0-21 12.6-39.9 32-47.9l.944-.391z" fill="none" stroke="#c9a24a" stroke-width="4"/><g fill="#c9a24a"><path id="seta" d="m64.7 30.6v24h-5.08l8.08 14 8.08-14h-5.08v-24z"/><use href="#seta" transform="rotate(120 67.7 71.5)"/><use href="#seta" transform="rotate(240 67.7 71.5)"/></g></svg>
+      <div>
+        <div class="t1">FUNDAÇÃO <span class="red">[REDACTED]</span></div>
+        <div class="t2">REGISTRO DE PESSOAL</div>
+      </div>
+    </a>
+    <a class="canal" id="canalLink" target="_blank" rel="noopener"></a>
   </header>
   <main id="app"></main>
-  <footer id="rodape"></footer>
+  <footer><span id="atualizado"></span><span>Não quer aparecer? Digite !perfil ocultar no chat</span></footer>
 </div>
 <script>
-  // Tudo que vem dos viewers entra como texto (textContent), nunca como HTML.
+  // Tudo que vem dos viewers (nome, alias, bio) entra como texto (textContent), nunca como HTML.
   const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
   const num = (n) => Number(n).toLocaleString('pt-BR');
-  const watch = (min) => (min < 60 ? `${min} ${min === 1 ? 'minuto' : 'minutos'}` : `${num(Math.floor(min / 60))} ${Math.floor(min / 60) === 1 ? 'hora' : 'horas'}`);
+  const watch = (min) => (min < 60 ? `${min} min` : `${num(Math.floor(min / 60))} h`);
+  const semEmoji = (s) => s.replace(/^[^\p{L}\p{N}]+/u, ''); // os nomes do config começam com emoji; aqui o visual é sóbrio
   function ha(iso) {
     const dias = Math.floor((Date.now() - new Date(iso)) / 864e5);
     if (dias < 1) return 'hoje';
@@ -118,73 +135,101 @@
   }
   const app = document.getElementById('app');
   const link = (login) => `?u=${encodeURIComponent(login)}`;
+  const foto = (src, alt) => { const i = el('img'); i.src = src; i.alt = alt; i.loading = 'lazy'; return i; };
+  const check = () => {
+    const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    s.setAttribute('viewBox', '0 0 18 18'); s.setAttribute('width', '18'); s.setAttribute('height', '18'); s.setAttribute('aria-hidden', 'true');
+    s.innerHTML = '<circle cx="9" cy="9" r="7.5" fill="none" stroke="#c9a24a" stroke-width="1.4"/><path d="M5.5 9.2l2.3 2.3 4.7-4.8" fill="none" stroke="#c9a24a" stroke-width="1.4"/>';
+    return s;
+  };
 
-  function ranking(viewers) {
-    app.replaceChildren();
+  function ranking(viewers, aviso) {
+    const intro = el('section', 'intro');
+    const h1 = el('h1'); h1.append('Os agentes', el('br'), 'da live');
+    intro.append(el('div', 'aviso', 'ACESSO RESTRITO · SOMENTE PESSOAL AUTORIZADO'), h1,
+      el('p', null, 'Quem mais assiste, conversa e cria clipes. XP e watchtime contados pelo bot.'));
     const busca = el('div', 'search');
-    const input = el('input');
-    input.placeholder = 'Procurar pelo nome da Twitch…';
-    input.setAttribute('aria-label', 'Procurar viewer');
-    busca.append(input);
+    const lbl = el('label', 'rot', 'Procurar agente'); lbl.htmlFor = 'busca';
+    const input = el('input'); input.id = 'busca'; input.type = 'search'; input.placeholder = 'Nome na Twitch…';
+    busca.append(lbl, input);
     const lista = el('div', 'rank');
-    app.append(busca, lista);
+    app.replaceChildren(intro, ...(aviso ? [el('div', 'empty', aviso)] : []), busca, lista);
     function render(q) {
       lista.replaceChildren();
-      const achados = viewers.filter((v) => !q || v.login.includes(q) || v.nome.toLowerCase().includes(q)).slice(0, 100);
+      const achados = viewers.filter((v) => !q || v.login.includes(q) || v.nome.toLowerCase().includes(q) || v.alias?.toLowerCase().includes(q)).slice(0, 100);
       if (!achados.length) return lista.append(el('div', 'empty', q ? 'Ninguém encontrado com esse nome.' : 'Ninguém no registro ainda.'));
       for (const v of achados) {
-        const r = el('a', `row${v.pos <= 3 ? ` top${v.pos}` : ''}`);
+        const r = el('a', `row${v.pos <= 3 ? ' top' : ''}${v.pos === 1 ? ' p1' : ''}`);
         r.href = link(v.login);
-        const img = el('img'); img.src = v.avatar; img.alt = ''; img.loading = 'lazy';
-        const who = el('div'); who.append(el('div', 'nm', v.nome), el('div', 'sub', v.patente));
-        const lv = el('div', 'lv'); lv.append(el('b', null, `Nível ${v.nivel}`), document.createTextNode(watch(v.minutos)));
-        r.append(el('div', 'pos', `#${v.pos}`), img, who, lv);
+        const who = el('div', 'who'); who.append(el('div', 'nm', v.nome), el('div', 'sub', v.alias ? `${v.patente} · “${v.alias}”` : v.patente));
+        const lv = el('div', 'lv'); lv.append(el('b', null, `NÍVEL ${v.nivel}`), el('span', null, watch(v.minutos)));
+        r.append(el('div', 'pos', String(v.pos).padStart(2, '0')), foto(v.avatar, ''), who, lv);
         lista.append(r);
       }
     }
     input.addEventListener('input', () => render(input.value.trim().toLowerCase().replace(/^@/, '')));
     render('');
-    input.focus();
   }
 
   function perfil(v) {
-    app.replaceChildren();
-    const voltar = el('a', 'back', '← Voltar ao registro'); voltar.href = '?';
-    const d = el('section', 'dossie');
+    const voltar = el('a', 'back', '← VOLTAR AO RANKING'); voltar.href = '?';
+    const p = el('div', 'perfil');
 
-    const head = el('div', 'head');
-    const img = el('img'); img.src = v.avatar; img.alt = '';
+    const head = el('section', 'head');
+    const anel = el('div', 'anel'); const anel2 = el('div'); anel2.append(foto(v.avatar, `Foto de ${v.nome}`)); anel.append(anel2);
     const who = el('div', 'who');
-    who.append(el('h1', null, v.nome), el('span', 'badge', v.patente));
-    const posn = el('div', 'posn'); posn.append(el('b', null, `#${v.pos}`), el('span', null, 'no ranking'));
-    head.append(img, who, posn);
+    who.append(el('div', 'rot', `ARQUIVO Nº ${String(v.pos).padStart(4, '0')} · AGENTE`), el('h1', null, v.nome));
+    if (v.alias) who.append(el('div', 'alias', `vulgo “${v.alias}”`));
+    const tags = el('div', 'tags');
+    tags.append(el('span', 'patente', v.patente), el('span', 'nivel', `Nível ${v.nivel}`), el('span', 'pos', `#${v.pos} no ranking`));
+    who.append(tags, el('div', 'carimbo', 'CONFIDENCIAL'));
+    head.append(anel, who);
+    p.append(head);
+
+    if (v.bio) {
+      const bio = el('section', 'bio');
+      bio.append(el('div', 'rot', 'Observações do arquivo'), el('p', null, v.bio));
+      p.append(bio);
+    }
 
     const pct = Math.max(0, Math.min(100, ((v.xp - v.xpNivel) / (v.xpProximo - v.xpNivel)) * 100));
-    const xp = el('div', 'xp');
+    const xp = el('section', 'xp');
     const lbl = el('div', 'lbl');
     lbl.append(el('span', null, `${num(v.xp)} XP`), el('span', null, `faltam ${num(v.xpProximo - v.xp)} para o nível ${v.nivel + 1}`));
     const bar = el('div', 'bar'); const fill = el('i'); fill.style.width = `${pct}%`; bar.append(fill);
     xp.append(lbl, bar);
+    p.append(xp);
 
-    const stats = el('div', 'stats');
-    for (const [k, val] of [
-      ['Mensagens enviadas', `${num(v.mensagens)} ${v.mensagens === 1 ? 'mensagem' : 'mensagens'}`],
+    const stats = el('section', 'stats');
+    for (const [k, val, extra, cls] of [
+      ['Mensagens enviadas', num(v.mensagens)],
       ['Watchtime', watch(v.minutos)],
-      ['Nível', String(v.nivel)],
+      ['Nível', String(v.nivel), null, 'ouro'],
       ['Lives assistidas', num(v.lives)],
-      ['Sequência', `${v.sequencia} ${v.sequencia === 1 ? 'live' : 'lives'} (recorde ${v.recorde})`],
-    ]) { const s = el('div', 'stat'); s.append(el('div', 'k', k), el('div', 'v', val)); stats.append(s); }
-
-    const conquistas = el('div', 'ach');
-    const ordenadas = [...v.conquistas].sort((a, b) => b.tem - a.tem);
-    for (const c of ordenadas) {
-      const a = el('div', `a ${c.tem ? 'tem' : 'nao'}`);
-      a.append(el('div', 'n', c.nome), el('div', 'd', c.desde ? `Desde ${new Date(c.desde).toLocaleDateString('pt-BR')} (${ha(c.desde)})` : c.desc));
-      conquistas.append(a);
+      ['Sequência', String(v.sequencia), `recorde ${v.recorde}`],
+    ]) {
+      const s = el('div', `stat${cls ? ` ${cls}` : ''}`);
+      const vv = el('div', 'v', val); if (extra) vv.append(' ', el('small', null, extra));
+      s.append(el('div', 'rot', k), vv); stats.append(s);
     }
-    const n = v.conquistas.filter((c) => c.tem).length;
-    d.append(head, xp, stats, el('h2', null, `Conquistas · ${n} de ${v.conquistas.length}`), conquistas);
-    app.append(voltar, d);
+    p.append(stats);
+
+    // Só as conquistas que a pessoa tem; sem nenhuma, a seção nem aparece.
+    const tem = v.conquistas.filter((c) => c.tem);
+    if (tem.length) {
+      const sec = el('section');
+      const t = el('div', 'secao'); t.append(el('h2', null, 'Conquistas'), el('span', null, `${tem.length} ${tem.length === 1 ? 'OBTIDA' : 'OBTIDAS'}`));
+      const grade = el('div', 'ach');
+      tem.forEach((c, i) => {
+        const a = el('div', 'a');
+        const topo = el('div', 'topo'); topo.append(el('span', 'rot', `Nº ${String(i + 1).padStart(2, '0')}`), check());
+        a.append(topo, el('div', 'n', semEmoji(c.nome)), el('div', 'd', c.desde ? `${c.desc} desde ${new Date(c.desde).toLocaleDateString('pt-BR')} (${ha(c.desde)})` : c.desc));
+        grade.append(a);
+      });
+      sec.append(t, grade);
+      p.append(sec);
+    }
+    app.replaceChildren(voltar, p);
     document.title = `${v.nome} · Registro de Pessoal`;
   }
 
@@ -192,19 +237,14 @@
     .then((r) => r.json())
     .then((dados) => {
       const c = dados.canal;
-      document.getElementById('canalNome').textContent = c.nome;
-      document.getElementById('canalFoto').src = c.avatar;
-      const ln = el('a', null, `twitch.tv/${c.login}`); ln.href = `https://twitch.tv/${c.login}`; ln.target = '_blank'; ln.rel = 'noopener';
-      document.getElementById('canalLink').append(ln);
-      document.getElementById('rodape').textContent =
-        `Atualizado em ${new Date(dados.atualizado).toLocaleString('pt-BR')} · XP e watchtime contados pelo bot · não quer aparecer? digite !perfil ocultar no chat`;
+      const ln = document.getElementById('canalLink');
+      ln.textContent = `Canal · ${c.login}`; ln.href = `https://twitch.tv/${c.login}`;
+      document.getElementById('atualizado').textContent =
+        `Atualizado em ${new Date(dados.atualizado).toLocaleString('pt-BR')} · XP e watchtime contados pelo bot`;
       const u = new URLSearchParams(location.search).get('u')?.toLowerCase().replace(/^@/, '');
       const v = u && dados.viewers.find((x) => x.login === u);
-      if (u && !v) {
-        ranking(dados.viewers);
-        app.prepend(el('div', 'empty', `Não encontrei "${u}" no registro. Talvez ainda não tenha XP, ou pediu para ficar oculto.`));
-      } else if (v) perfil(v);
-      else ranking(dados.viewers);
+      if (v) perfil(v);
+      else ranking(dados.viewers, u ? `Não encontrei "${u}" no registro. Talvez ainda não tenha XP, ou pediu para ficar oculto.` : null);
     })
     .catch(() => app.replaceChildren(el('div', 'empty', 'Não consegui carregar os perfis agora. Tenta de novo daqui a pouco.')));
 </script>
