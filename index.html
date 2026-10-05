@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Registro de Pessoal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f12; --panel: #15181d; --panel2: #1b1f26; --line: #2a2f38;
+    --text: #e8eaed; --muted: #9aa3ae; --accent: #c9302c; --accent2: #f0b429; --ok: #3ddc84;
+    --twitch: #9146ff; --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); font: 400 16px/1.5 Inter, system-ui, sans-serif; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 24px 16px 64px; }
+  .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+
+  header { display: flex; align-items: center; gap: 14px; padding-bottom: 20px; border-bottom: 1px solid var(--line); margin-bottom: 24px; }
+  header img { width: 52px; height: 52px; border-radius: 50%; border: 2px solid var(--accent); }
+  header .t1 { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  header .t2 { font-size: 22px; font-weight: 800; }
+  header .sp { flex: 1; }
+  header .live { font-size: 13px; color: var(--muted); }
+  header .live a { color: var(--twitch); font-weight: 600; }
+
+  .search { display: flex; gap: 8px; margin-bottom: 20px; }
+  .search input { flex: 1; background: var(--panel); border: 1px solid var(--line); color: var(--text); border-radius: 10px;
+    padding: 12px 14px; font: inherit; outline: none; }
+  .search input:focus { border-color: var(--accent2); }
+
+  .rank { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .row { display: grid; grid-template-columns: 44px 40px 1fr auto; gap: 12px; align-items: center; padding: 10px 14px;
+    border-top: 1px solid var(--line); transition: background .15s; }
+  .row:first-child { border-top: 0; }
+  .row:hover { background: var(--panel2); }
+  .row .pos { font-family: "IBM Plex Mono", monospace; color: var(--muted); text-align: right; }
+  .row.top1 .pos { color: var(--accent2); } .row.top2 .pos { color: #c0c6cf; } .row.top3 .pos { color: #cd8b52; }
+  .row img { width: 40px; height: 40px; border-radius: 50%; }
+  .row .nm { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .row .sub { font-size: 13px; color: var(--muted); }
+  .row .lv { text-align: right; font-size: 13px; color: var(--muted); }
+  .row .lv b { display: block; color: var(--text); font-size: 15px; }
+  .empty { padding: 28px; text-align: center; color: var(--muted); }
+
+  .back { display: inline-block; margin-bottom: 16px; color: var(--muted); font-size: 14px; }
+  .back:hover { color: var(--text); }
+  .dossie { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; position: relative; overflow: hidden; }
+  .dossie::before { content: "DOSSIÊ"; position: absolute; right: -10px; top: 8px; transform: rotate(8deg);
+    font: 600 46px "IBM Plex Mono", monospace; color: rgba(201, 48, 44, .09); letter-spacing: .1em; pointer-events: none; }
+  .head { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+  .head img { width: 96px; height: 96px; border-radius: 16px; border: 2px solid var(--line); }
+  .head .who { flex: 1; min-width: 200px; }
+  .head h1 { margin: 0; font-size: 28px; line-height: 1.15; overflow-wrap: anywhere; }
+  .badge { display: inline-block; margin-top: 6px; padding: 3px 10px; border-radius: 999px; font-size: 13px; font-weight: 600;
+    background: rgba(201, 48, 44, .15); color: #ff8a85; border: 1px solid rgba(201, 48, 44, .4); }
+  .head .posn { text-align: right; }
+  .head .posn b { display: block; font: 600 30px "IBM Plex Mono", monospace; color: var(--accent2); }
+  .head .posn span { font-size: 13px; color: var(--muted); }
+
+  .xp { margin: 20px 0 6px; }
+  .xp .lbl { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+  .bar { height: 10px; background: var(--panel2); border-radius: 999px; overflow: hidden; border: 1px solid var(--line); }
+  .bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 999px; }
+
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 20px; }
+  .stat { background: var(--panel2); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+  .stat .k { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+  .stat .v { font-size: 20px; font-weight: 800; margin-top: 2px; }
+
+  h2 { font-size: 15px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 28px 0 12px; }
+  .ach { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+  .a { background: var(--panel2); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+  .a.tem { border-color: rgba(240, 180, 41, .45); background: linear-gradient(160deg, rgba(240, 180, 41, .10), var(--panel2) 60%); }
+  .a .n { font-weight: 800; }
+  .a .d { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .a.nao { opacity: .5; }
+  .a.nao .n::after { content: "  🔒"; font-size: 12px; }
+
+  footer { margin-top: 36px; font-size: 13px; color: var(--muted); text-align: center; }
+  @media (max-width: 560px) {
+    .row { grid-template-columns: 34px 36px 1fr; }
+    .row .lv { display: none; }
+    .head .posn { text-align: left; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img id="canalFoto" alt="">
+    <div>
+      <div class="t1">Fundação · Registro de Pessoal</div>
+      <div class="t2" id="canalNome">Carregando…</div>
+    </div>
+    <div class="sp"></div>
+    <div class="live" id="canalLink"></div>
+  </header>
+  <main id="app"></main>
+  <footer id="rodape"></footer>
+</div>
+<script>
+  // Tudo que vem dos viewers entra como texto (textContent), nunca como HTML.
+  const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+  const num = (n) => Number(n).toLocaleString('pt-BR');
+  const watch = (min) => (min < 60 ? `${min} ${min === 1 ? 'minuto' : 'minutos'}` : `${num(Math.floor(min / 60))} ${Math.floor(min / 60) === 1 ? 'hora' : 'horas'}`);
+  function ha(iso) {
+    const dias = Math.floor((Date.now() - new Date(iso)) / 864e5);
+    if (dias < 1) return 'hoje';
+    if (dias < 14) return `há ${dias} ${dias === 1 ? 'dia' : 'dias'}`;
+    if (dias < 60) return `há ${Math.floor(dias / 7)} semanas`;
+    if (dias < 365) return `há ${Math.floor(dias / 30)} ${Math.floor(dias / 30) === 1 ? 'mês' : 'meses'}`;
+    const anos = Math.floor(dias / 365);
+    return `há ${anos} ${anos === 1 ? 'ano' : 'anos'}`;
+  }
+  const app = document.getElementById('app');
+  const link = (login) => `?u=${encodeURIComponent(login)}`;
+
+  function ranking(viewers) {
+    app.replaceChildren();
+    const busca = el('div', 'search');
+    const input = el('input');
+    input.placeholder = 'Procurar pelo nome da Twitch…';
+    input.setAttribute('aria-label', 'Procurar viewer');
+    busca.append(input);
+    const lista = el('div', 'rank');
+    app.append(busca, lista);
+    function render(q) {
+      lista.replaceChildren();
+      const achados = viewers.filter((v) => !q || v.login.includes(q) || v.nome.toLowerCase().includes(q)).slice(0, 100);
+      if (!achados.length) return lista.append(el('div', 'empty', q ? 'Ninguém encontrado com esse nome.' : 'Ninguém no registro ainda.'));
+      for (const v of achados) {
+        const r = el('a', `row${v.pos <= 3 ? ` top${v.pos}` : ''}`);
+        r.href = link(v.login);
+        const img = el('img'); img.src = v.avatar; img.alt = ''; img.loading = 'lazy';
+        const who = el('div'); who.append(el('div', 'nm', v.nome), el('div', 'sub', v.patente));
+        const lv = el('div', 'lv'); lv.append(el('b', null, `Nível ${v.nivel}`), document.createTextNode(watch(v.minutos)));
+        r.append(el('div', 'pos', `#${v.pos}`), img, who, lv);
+        lista.append(r);
+      }
+    }
+    input.addEventListener('input', () => render(input.value.trim().toLowerCase().replace(/^@/, '')));
+    render('');
+    input.focus();
+  }
+
+  function perfil(v) {
+    app.replaceChildren();
+    const voltar = el('a', 'back', '← Voltar ao registro'); voltar.href = '?';
+    const d = el('section', 'dossie');
+
+    const head = el('div', 'head');
+    const img = el('img'); img.src = v.avatar; img.alt = '';
+    const who = el('div', 'who');
+    who.append(el('h1', null, v.nome), el('span', 'badge', v.patente));
+    const posn = el('div', 'posn'); posn.append(el('b', null, `#${v.pos}`), el('span', null, 'no ranking'));
+    head.append(img, who, posn);
+
+    const pct = Math.max(0, Math.min(100, ((v.xp - v.xpNivel) / (v.xpProximo - v.xpNivel)) * 100));
+    const xp = el('div', 'xp');
+    const lbl = el('div', 'lbl');
+    lbl.append(el('span', null, `${num(v.xp)} XP`), el('span', null, `faltam ${num(v.xpProximo - v.xp)} para o nível ${v.nivel + 1}`));
+    const bar = el('div', 'bar'); const fill = el('i'); fill.style.width = `${pct}%`; bar.append(fill);
+    xp.append(lbl, bar);
+
+    const stats = el('div', 'stats');
+    for (const [k, val] of [
+      ['Mensagens enviadas', `${num(v.mensagens)} ${v.mensagens === 1 ? 'mensagem' : 'mensagens'}`],
+      ['Watchtime', watch(v.minutos)],
+      ['Nível', String(v.nivel)],
+      ['Lives assistidas', num(v.lives)],
+      ['Sequência', `${v.sequencia} ${v.sequencia === 1 ? 'live' : 'lives'} (recorde ${v.recorde})`],
+    ]) { const s = el('div', 'stat'); s.append(el('div', 'k', k), el('div', 'v', val)); stats.append(s); }
+
+    const conquistas = el('div', 'ach');
+    const ordenadas = [...v.conquistas].sort((a, b) => b.tem - a.tem);
+    for (const c of ordenadas) {
+      const a = el('div', `a ${c.tem ? 'tem' : 'nao'}`);
+      a.append(el('div', 'n', c.nome), el('div', 'd', c.desde ? `Desde ${new Date(c.desde).toLocaleDateString('pt-BR')} (${ha(c.desde)})` : c.desc));
+      conquistas.append(a);
+    }
+    const n = v.conquistas.filter((c) => c.tem).length;
+    d.append(head, xp, stats, el('h2', null, `Conquistas · ${n} de ${v.conquistas.length}`), conquistas);
+    app.append(voltar, d);
+    document.title = `${v.nome} · Registro de Pessoal`;
+  }
+
+  fetch('perfis.json', { cache: 'no-store' })
+    .then((r) => r.json())
+    .then((dados) => {
+      const c = dados.canal;
+      document.getElementById('canalNome').textContent = c.nome;
+      document.getElementById('canalFoto').src = c.avatar;
+      const ln = el('a', null, `twitch.tv/${c.login}`); ln.href = `https://twitch.tv/${c.login}`; ln.target = '_blank'; ln.rel = 'noopener';
+      document.getElementById('canalLink').append(ln);
+      document.getElementById('rodape').textContent =
+        `Atualizado em ${new Date(dados.atualizado).toLocaleString('pt-BR')} · XP e watchtime contados pelo bot · não quer aparecer? digite !perfil ocultar no chat`;
+      const u = new URLSearchParams(location.search).get('u')?.toLowerCase().replace(/^@/, '');
+      const v = u && dados.viewers.find((x) => x.login === u);
+      if (u && !v) {
+        ranking(dados.viewers);
+        app.prepend(el('div', 'empty', `Não encontrei "${u}" no registro. Talvez ainda não tenha XP, ou pediu para ficar oculto.`));
+      } else if (v) perfil(v);
+      else ranking(dados.viewers);
+    })
+    .catch(() => app.replaceChildren(el('div', 'empty', 'Não consegui carregar os perfis agora. Tenta de novo daqui a pouco.')));
+</script>
+</body>
+</html>
